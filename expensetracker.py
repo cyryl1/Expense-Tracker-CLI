@@ -1,49 +1,86 @@
-import cmd, os
+import json
+import datetime
 
-class ExpenseTracker(cmd.Cmd):
-    intro = 'Welcome to the Expense Tracker Shell'
-    prompt = 'expense-tracker>> '
+class ExpenseTracker:
     
     
 
     def __init__(self):
-        super().__init__()
         self.expenses = {}
-        self.file = 'expense.csv'
+        self.file = 'expense.json'
 
 
-    def do_add(self, arg):
+    def add(self, description, amount):
         """Add a new expense: add <amount> <description>"""
-        print("added")
+        try:
+            with open(self.file, 'r') as f:
+                data = json.load(f)
+        except FileNotFoundError:
+            data = []
+
+        if data:
+            next_id = data[-1]['Id'] + 1
+        else:
+            next_id = 1
+
+        self.expenses['Id'] = next_id
+        self.expenses['Description'] = description
+        self.expenses['Amount'] = f"${float(amount)}"
+        self.expenses['Date'] = datetime.datetime.now().strftime("%Y-%m-%d")
+        self.expenses['UpdateDate'] = self.expenses['Date']
+
+        data.append(self.expenses)
+        
+        with open(self.file, 'w') as f:
+            json.dump(data, f, indent=4)
+            print(f"Expense added successfully, ID: {self.expenses["Id"]}")
+        
     
-    def do_update(self, arg):
+    def update(self, id, description, amount):
         """
         Update an existing expense: 
         update <id> <new_amount> <new_description>
         """
-        print("updated")
+        try:
+            with open(self.file, 'r') as f:
+                data = json.load(f)
+
+            for expense in data:
+                if expense["Id"] == id:
+                    expense["Description"] = description
+                    expense["Amount"] = amount
+                    expense["UpdateDate"] = datetime.datetime.now().strftime("%Y-%m-%d")
+
+                    break
+
+            with open(self.file, 'w') as f:
+                json.dump(data, f, indent=4)
+        except IndexError:
+            print("Please provide an ID and a new description or amount")
+        except ValueError:
+            print("ID must be a number")
+        except ValueError:
+            print("Amount must cannot be negative")
+        except FileNotFoundError:
+            print("File not found")
+
+        print(f"Updated Task with ID {id}")
     
-    def do_delete(self, arg):
+    def delete(self, arg):
         """Delete an expense: delete <id>"""
         print("deleted")
     
-    def do_view(self, arg):
+    def view(self, arg):
         """
         View all expenses: view
         """
         print("view")
     
-    def do_viewSummary(self, arg):
+    def viewSummary(self, arg):
         """
         View a summary of all expenses or all expenses for a specific 
         month for a specific month
         """
         print("viewSummary")
 
-    def do_exit(self, arg):
-        """Exit the expense tracker shell: exit"""
-        print("Exiting...")
-        return True
-if __name__ == "__main__":
-    ExpenseTracker().cmdloop()
         
