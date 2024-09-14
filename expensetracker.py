@@ -36,7 +36,7 @@ class ExpenseTracker:
             print(f"Expense added successfully, ID: {self.expenses["Id"]}")
         
     
-    def update(self, id, description, amount):
+    def update(self, id, description=None, amount=None):
         """
         Update an existing expense: 
         update <id> <new_amount> <new_description>
@@ -47,14 +47,24 @@ class ExpenseTracker:
 
             for expense in data:
                 if expense["Id"] == id:
-                    expense["Description"] = description
-                    expense["Amount"] = amount
+                    if description and amount:
+                        expense["Description"] = description
+                        expense["Amount"] = f"${float(amount)}"
+                    elif description:
+                        expense["Description"] = description
+                    elif amount:
+                        expense["Amount"] = f"${float(amount)}"
+                    else:
+                        print("Please provide a description or an amount")
                     expense["UpdateDate"] = datetime.datetime.now().strftime("%Y-%m-%d")
 
                     break
 
+                    
+
             with open(self.file, 'w') as f:
                 json.dump(data, f, indent=4)
+            print(f"Updated Task with ID {id}")
         except IndexError:
             print("Please provide an ID and a new description or amount")
         except ValueError:
@@ -64,11 +74,25 @@ class ExpenseTracker:
         except FileNotFoundError:
             print("File not found")
 
-        print(f"Updated Task with ID {id}")
+        
     
-    def delete(self, arg):
+    def delete(self, id):
         """Delete an expense: delete <id>"""
-        print("deleted")
+        try:
+            with open(self.file, 'r') as f:
+                data = json.load(f)
+
+            for expense in data:
+                if expense["Id"] == id:
+                    data.remove(expense)
+                    break
+                else:
+                    data = []
+
+            with open(self.file, "w") as f:
+                json.dump(data, f, indent=4)
+        except ValueError:
+            print("ID must be a number")
     
     def view(self, arg):
         """

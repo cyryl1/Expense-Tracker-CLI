@@ -36,32 +36,45 @@ class CLIApp(cmd.Cmd):
         """
         args = shlex.split(args)
         if "--id" in args:
-            id_index = args.index("--index") + 1
-            id = args[id_index]
+            id_index = args.index("--id") + 1
+            id = int(args[id_index])
         else:
             print("Id must be present")
+
+        description = None
+        amount = None
             
 
         if "--description" in args:
             description_index = args.index("--description") + 1
-            description = description_index
+            description = args[description_index]
         elif "--amount" in args:
             amount_index = args.index("--amount") + 1
-            amount = amount_index
+            amount = args[amount_index]
         elif "--description" in args and "--amount" in args:
             description_index = args.index("--description") + 1
-            description = description_index
+            description = args[description_index]
 
             amount_index = args.index("--amount") + 1
-            amount = amount_index
+            amount = args[amount_index]
         else:
             print("A description or an amount must be present or both")
+
+        expense.update(id, description, amount)
         
-        expense.update(id, description=None, amount=None)
+        
     
     def do_delete(self, args):
         """Delete an expense: delete <id>"""
-        print(args)
+        args = shlex.split(args)
+
+        if "--id" in args:
+            id_index = args.index("--id") + 1
+            id = int(args[id_index])
+        else:
+            id = None
+        
+        expense.delete(id)
     
     def do_view(self, args):
         """
