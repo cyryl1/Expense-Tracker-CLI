@@ -1,5 +1,6 @@
 import json
 import datetime
+import pandas as pd
 
 class ExpenseTracker:
     
@@ -94,17 +95,48 @@ class ExpenseTracker:
         except ValueError:
             print("ID must be a number")
     
-    def view(self, arg):
+    def list(self):
         """
         View all expenses: view
         """
-        print("view")
+        
+        with open(self.file, 'r') as f:
+            data = json.load(f)
+
+            if data:
+                # headers = ["ID", "Description", "Amount", "Date", "Update Date"]
+                # table = tabulate.tabulate(data, headers, tablefmt="plain")
+                # print(table)
+                pd.set_option('display.max_colwidth', 100)
+                pd.set_option('display.width', 1000)
+
+                df = pd.json_normalize(data)
+                print(df.to_string(index=False))
+            else:
+                print("No expenses found")
     
     def viewSummary(self, arg):
         """
         View a summary of all expenses or all expenses for a specific 
         month for a specific month
         """
-        print("viewSummary")
-
+        with open(self.file, 'r') as f:
+            data = json.load(f)
+        if arg is None:
+                total_amount = sum(float(expense["Amount"].replace("$", "")) for expense in data)
+                print(f"Total expenses: ${total_amount}")
+        elif arg:
+            try:
+                month = int(arg)
+                current_year = datetime.datetime.now().year
+                filtered_data = [
+                    expense for expense in data
+                    if datetime.datetime.strptime(expense["Date"], "%Y-%m-%d").month == month and
+                    datetime.datetime.strptime(expense["Date"], "%Y-%m-%d").year == current_year
+                ]
+                total_amount = sum(float(expense["Amount"].replace("$", "")) for expense in filtered_data)
+                print(f"Total expense for month {month}: ${total_amount:.2f}")
+            except ValueError:
+                print("Invalid date format. Please use --month <months-number>")
+            
         

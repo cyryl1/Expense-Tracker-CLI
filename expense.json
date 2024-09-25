@@ -1,1 +1,37 @@
-[]
+[
+    {
+        "Id": 1,
+        "Description": "Groceries",
+        "Amount": "$50.0",
+        "Date": "2024-09-14",
+        "UpdateDate": "2024-09-14"
+    },
+    {
+        "Id": 2,
+        "Description": "Lunch",
+        "Amount": "$20.0",
+        "Date": "2024-08-14",
+        "UpdateDate": "2024-09-14"
+    },
+    {
+        "Id": 3,
+        "Description": "Beach",
+        "Amount": "$100.0",
+        "Date": "2024-09-14",
+        "UpdateDate": "2024-09-14"
+    },
+    {
+        "Id": 4,
+        "Description": "Vacation at miami",
+        "Amount": "$1000.0",
+        "Date": "2024-08-14",
+        "UpdateDate": "2024-09-14"
+    },
+    {
+        "Id": 5,
+        "Description": "Went to Man U stadium to watch",
+        "Amount": "$200.0",
+        "Date": "2024-07-14",
+        "UpdateDate": "2024-09-14"
+    }
+]

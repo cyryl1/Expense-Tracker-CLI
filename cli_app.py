@@ -76,19 +76,27 @@ class CLIApp(cmd.Cmd):
         
         expense.delete(id)
     
-    def do_view(self, args):
+    def do_list(self, args):
         """
         View all expenses: view
         """
-        print(args)
+        if args:
+            print("No argument needed use View instead")
+        else:
+            expense.list()
     
-    def do_viewSummary(self, args):
+    def do_summary(self, args):
         """
         View a summary of all expenses or all expenses for a specific 
         month for a specific month
         """
-        print(args)
-
+        args = shlex.split(args)
+        if '--month' in args:
+            month_index = args.index("--month") + 1
+            month = args[month_index]
+            expense.viewSummary(month)
+        else:
+            expense.viewSummary(None)
     def do_exit(self, args):
         """Exit the expense tracker shell: exit"""
         print("Exiting...")

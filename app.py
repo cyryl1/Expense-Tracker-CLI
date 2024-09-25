@@ -17,6 +17,7 @@ delete_parser = subparsers.add_parser("delete", help="delete expense")
 delete_parser.add_argument("arguments", type=str, help="Contains id of expense to be deleted")
 
 view_parser = subparsers.add_parser("list", help="view all expenses")
+view_parser.add_argument("arguments", type=str, help="Prints all expenses")
 
 viewSummary_parser = subparsers.add_parser("summary", help="views summary of expenses")
 
@@ -32,7 +33,7 @@ if args.command == "delete":
     cli.do_delete(args.arguments)
 
 if args.command == "list":
-    cli.do_view(args.arguments)
+    cli.do_list(args.arguments)
 
 if args.command == "summary":
     cli.do_viewSummary(args.arguments)
